@@ -1,0 +1,21 @@
+{
+  "Group": "EtherealLabs",
+  "Name": "BiomesCompass",
+  "Version": "1.0.2",
+  "Description": "Biome's Compass adds a brand-new craftable item to your game that allows you to locate biome locations with ease!",
+  "Authors": [
+    {
+      "Name": "EtherealLabs",
+      "Email": "darkeox34@gmail.com",
+      "Url": "https://ethereallabs.it"
+    }
+  ],
+  "Website": "https://ethereallabs.it",
+  "Main": "it.ethereallabs.biomescompass.BiomesCompass",
+  "OptionalDependencies": {
+    "Buuz135:MultipleHUD":"*"
+  },
+  "ServerVersion": ">=0.1.0",
+  "DisabledByDefault": false,
+  "IncludesAssetPack": true
+}

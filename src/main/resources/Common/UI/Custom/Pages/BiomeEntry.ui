@@ -1,0 +1,7 @@
+$C = "../Common.ui";
+
+$C.@TextButton #BiomeName{
+  Anchor: (Height: 40, Bottom: 2);
+  Padding: (Horizontal: 10);
+  Text: "Biome Name";
+}

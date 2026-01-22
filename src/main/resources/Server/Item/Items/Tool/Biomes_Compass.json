@@ -1,0 +1,56 @@
+{
+  "TranslationProperties": {
+    "Name": "items.EtherealLabs_Biomes_Compass.name",
+    "Description": "items.EtherealLabs_Biomes_Compass.description"
+  },
+  "Icon": "Icons/ItemsGenerated/biomes_compass_icon.png",
+  "ItemLevel": 1,
+  "Model": "Items/Tools/Biomes_Compass/Compass3.blockymodel",
+  "Texture": "Items/Tools/Biomes_Compass/compass_texture.png",
+  "Recipe": {
+    "TimeSeconds": 3,
+    "Input": [
+      {
+        "ItemId": "Ingredient_Bar_Iron",
+        "Quantity": 10
+      },
+      {
+        "ItemId": "Ingredient_Bar_Gold",
+        "Quantity": 5
+      },
+      {
+        "ItemId": "Ingredient_Fibre",
+        "Quantity": 4
+      },
+      {
+        "ResourceTypeId": "Wood_Trunk",
+        "Quantity": 6
+      }
+    ],
+    "OutputQuantity": 1,
+    "BenchRequirement": [
+      {
+        "Type": "Crafting",
+        "Categories": [
+          "Workbench_Tools"
+        ],
+        "RequiredTierLevel": 2,
+        "Id": "Workbench"
+      }
+    ]
+  },
+  "Quality": "Rare",
+  "Scale": 1.5,
+  "PlayerAnimationsId": "Item",
+  "UsePlayerAnimations": true,
+  "MaxStack": 1,
+  "Interactions": {
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "compass_open_ui_interaction"
+        }
+      ]
+    }
+  }
+}

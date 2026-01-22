@@ -1,0 +1,57 @@
+$C = "../Common.ui";
+
+$C.@PageOverlay {
+  LayoutMode: Middle;
+
+  $C.@DecoratedContainer #MainContainer {
+    Anchor: (Width: 450, Height: 650);
+    #Title {
+      $C.@Title {
+        @Text = "Biome Compass";
+      }
+    }
+    #Content {
+      LayoutMode: Top;
+      Padding: (Full: 20);
+
+      Group #SearchContainer {
+        Anchor: (Height: 40, Bottom: 10);
+        LayoutMode: Left;
+
+        $C.@TextField #SearchInput {
+          FlexWeight: 1;
+          PlaceholderText: "Filter biomes...";
+        }
+      }
+
+      Label #SelectedBiomeLabel {
+        Text: "Selected: None";
+        Anchor: (Bottom: 5);
+        Style: (FontSize: 14, TextColor: #aaaaaa);
+      }
+
+      Group #ListContainer {
+        FlexWeight: 1;
+        LayoutMode: TopScrolling;
+        Background: #1a2433(0.5);
+        Padding: (Top: 5, Horizontal: 5);
+        ScrollbarStyle: $C.@DefaultScrollbarStyle;
+      }
+
+      Group #Footer {
+        Anchor: (Height: 50, Top: 10);
+        LayoutMode: Right;
+
+        $C.@SecondaryTextButton #CloseButton {
+          Text: "CLOSE";
+          Anchor: (Width: 130, Right: 10);
+        }
+
+        $C.@TextButton #SearchButton {
+          Text: "SEARCH";
+          Anchor: (Width: 160);
+        }
+      }
+    }
+  }
+}
