@@ -2,6 +2,8 @@ package it.ethereallabs.biomescompass.hud;
 
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
+import com.hypixel.hytale.server.core.ui.PatchStyle;
+import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import it.ethereallabs.biomescompass.BiomesCompass;
@@ -19,6 +21,8 @@ public class HUD extends CustomUIHud {
     private final int targetX;
     private final int targetZ;
     private int distance;
+
+    private int lastNeedleIndex = -1;
 
     public HUD(PlayerRef playerRef, String biomeName, int targetX, int targetZ, int distance) {
         super(playerRef);
@@ -48,13 +52,44 @@ public class HUD extends CustomUIHud {
             double dz = getPlayerRef().getTransform().getPosition().getZ() - targetZ;
 
             this.distance = (int) sqrt(pow(dx, 2.0) + pow(dz, 2.0));
+
             if(BiomesCompass.getCompassManager().getPlayersTracking().containsKey(getPlayerRef().getUuid())) {
-                this.show();
+                UICommandBuilder update = new UICommandBuilder();
+                update.set("#DistLabel.Text", "Distance: " + distance + "m");
+                this.update(false, update);
             }
         }
     }
 
-    public int getDistance() {
-        return distance;
+    public void updateNeedleTexture(int frameIndex) {
+        if (this.lastNeedleIndex == frameIndex) return;
+
+        this.lastNeedleIndex = frameIndex;
+        String texturePath = String.format("needles/needle_%02d.png", frameIndex);
+
+        UICommandBuilder update = new UICommandBuilder();
+
+        PatchStyle style = new PatchStyle();
+
+        style.setTexturePath(Value.of(texturePath));
+        style.setBorder(Value.of(0));
+
+        update.setObject("#Needle.Background", style);
+
+        BiomesCompass.getInstance().getLogger().atInfo().log("Direction changed to " + texturePath);
+
+        this.update(false, update);
+    }
+
+    public int getTargetX() {
+        return targetX;
+    }
+
+    public int getTargetZ() {
+        return targetZ;
+    }
+
+    public int getLastNeedleIndex() {
+        return lastNeedleIndex;
     }
 }

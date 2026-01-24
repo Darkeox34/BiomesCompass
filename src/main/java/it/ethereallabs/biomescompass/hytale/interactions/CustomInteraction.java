@@ -62,8 +62,6 @@ public class CustomInteraction extends SimpleInstantInteraction {
         if (playerRef == null) return;
 
         if (states.crouching) {
-            //BiomesCompass.getCompassManager().getPlayersTracking().remove(playerRef.getUuid());
-            //CompassUtils.hideHUD(playerRef, player, "BiomesCompass_EmptyHUD", new EmptyHUD(playerRef));
             BiomesCompass.getCompassManager().stopTracking(playerRef);
             player.sendMessage(Message.raw("Research canceled!").color(Color.GREEN));
             return;

@@ -3,24 +3,41 @@ $C = "../Common.ui";
 Group #HudContainer {
     Anchor: (Top: 20, Left: 20, Width: 450, Height:150);
     LayoutMode: Top;
-    Padding: (Full: 10);
+    Padding: (Top: 10);
     Background: #000000(0.0);
 
     Label #TrackingLabel {
         Text: "Tracking: None";
         Style: (FontSize: 22, TextColor: #FFD700);
-        Anchor: (Height: 20, Bottom: 12);
+        Anchor: (Height: 20, Bottom: 12, Left: 10);
     }
 
     Label #CoordsLabel {
         Text: "Target: --, --";
         Style: (FontSize: 20, TextColor: #FFFFFF);
-        Anchor: (Height: 18, Bottom: 12);
+        Anchor: (Height: 18, Bottom: 12, Left: 10);
     }
 
     Label #DistLabel {
         Text: "Distance: --";
         Style: (FontSize: 20, TextColor: #FFFFFF);
-        Anchor: (Height: 18);
+        Anchor: (Height: 18, Left: 10);
+    }
+    Group #CompassRoot {
+      Anchor: (Width: 200, Height: 145, Top: 40, Left: 0);
+      Group {
+        Anchor: (Width: 200, Height: 145);
+        Background: PatchStyle(
+          TexturePath: "screenshot2.png",
+          Border: 0
+        );
+      }
+      Group #Needle {
+        Anchor: (Width: 42, Height: 41);
+        Background: PatchStyle(
+          TexturePath: "needles/needle_00.png",
+          Border: 0
+        );
+      }
     }
 }

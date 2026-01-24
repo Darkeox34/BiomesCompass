@@ -1,6 +1,5 @@
 package it.ethereallabs.biomescompass.hytale.systems;
 
-import com.buuz135.mhud.MultipleHUD;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Store;
@@ -12,17 +11,18 @@ import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.entity.movement.MovementStatesComponent; // Assicurati sia corretto per la rotazione
 import it.ethereallabs.biomescompass.BiomesCompass;
 import it.ethereallabs.biomescompass.core.CompassUtils;
 import it.ethereallabs.biomescompass.hud.EmptyHUD;
+import it.ethereallabs.biomescompass.hud.HUD;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class CompassSystem extends EntityTickingSystem<EntityStore> {
 
-    private final Query<EntityStore> query =
-            Query.and(Player.getComponentType());
+    private final Query<EntityStore> query = Query.and(Player.getComponentType());
 
     private boolean isCompass(@Nullable ItemStack stack) {
         return stack != null && (
@@ -33,9 +33,7 @@ public class CompassSystem extends EntityTickingSystem<EntityStore> {
 
     private boolean hasCompass(@Nullable Inventory inventory) {
         if (inventory == null) return false;
-
-        return isCompass(inventory.getActiveHotbarItem())
-                || isCompass(inventory.getUtilityItem());
+        return isCompass(inventory.getActiveHotbarItem()) || isCompass(inventory.getUtilityItem());
     }
 
     @Override
@@ -47,7 +45,6 @@ public class CompassSystem extends EntityTickingSystem<EntityStore> {
             @Nonnull CommandBuffer<EntityStore> commandBuffer
     ) {
         var holder = EntityUtils.toHolder(index, archetypeChunk);
-
         PlayerRef playerRef = holder.getComponent(PlayerRef.getComponentType());
         if (playerRef == null) return;
 
@@ -56,44 +53,46 @@ public class CompassSystem extends EntityTickingSystem<EntityStore> {
         if (currentData == null) return;
 
         Player player = holder.getComponent(Player.getComponentType());
-        boolean isHolding = player != null && hasCompass(player.getInventory());
+        if (player == null) return;
 
+        boolean isHolding = hasCompass(player.getInventory());
         if (currentData.usingCompass() != isHolding) {
-
             if (isHolding) {
                 CompassUtils.setHUD(playerRef, player, "BiomesCompass_HUD", currentData.hud());
-            } else if (player != null) {
+            } else {
                 CompassUtils.hideHUD(playerRef, player, "BiomesCompass_HUD", new EmptyHUD(playerRef));
             }
-
-            BiomesCompass.getCompassManager().getPlayersTracking().put(
-                    uuid,
-                    currentData.copy(isHolding)
-            );
+            BiomesCompass.getCompassManager().getPlayersTracking().put(uuid, currentData.copy(isHolding));
         }
 
-        if (isHolding) {
-            var data = BiomesCompass.getCompassManager().getPlayersTracking().get(playerRef.getUuid());
-            if (data != null && data.hud() != null) {
-                data.hud().tickHudTracking();
-            }
-
-            /*
-            int frame = getCompassFrame(
-                    playerRef.transform.position.x,
-                    playerRef.transform.position.z,
-                    data.hud.targetX,
-                    data.hud.targetZ,
-                    playerRef.transform.rotation.yaw
-            );
-
-            ItemStack updated = player.inventory.activeHotbarItem
-                    .withState("dir_" + frame);
-
-            short slot = (short) player.inventory.activeHotbarSlot;
-            player.inventory.hotbar.setItemStackForSlot(slot, updated);
-            */
+        if (isHolding && currentData.hud() != null) {
+            updateNeedleRotation(playerRef, currentData.hud());
+            currentData.hud().tickHudTracking();
         }
+    }
+
+    private void updateNeedleRotation(PlayerRef player, HUD hud) {
+        float angleDegrees = getAngleDegrees(player, hud);
+
+        angleDegrees = (angleDegrees % 360 + 360) % 360;
+
+        int frameIndex = Math.round((angleDegrees / 360f) * 64) % 64;
+
+        hud.updateNeedleTexture(frameIndex);
+    }
+
+    private static float getAngleDegrees(PlayerRef player, HUD hud) {
+        var pos = player.getTransform().getPosition();
+        double targetX = hud.getTargetX();
+        double targetZ = hud.getTargetZ();
+
+        float playerYaw = player.getTransform().getRotation().getY();
+
+        double dx = targetX - pos.x;
+        double dz = targetZ - pos.z;
+
+        double angleToTarget = Math.atan2(-dx, -dz);
+        return (float) Math.toDegrees(angleToTarget - playerYaw);
     }
 
     @Override
