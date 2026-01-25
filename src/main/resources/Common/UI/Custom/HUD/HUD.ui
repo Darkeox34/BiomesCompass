@@ -33,7 +33,7 @@ Group #HudContainer {
         );
       }
       Group #Needle {
-        Anchor: (Width: 42, Height: 41);
+        Anchor: (Width: 42, Height: 41, Top: 60);
         Background: PatchStyle(
           TexturePath: "needles/needle_00.png",
           Border: 0

@@ -22,6 +22,8 @@ public class HUD extends CustomUIHud {
     private final int targetZ;
     private int distance;
 
+    private float lastAngle = 0.0f;
+
     private int lastNeedleIndex = -1;
 
     public HUD(PlayerRef playerRef, String biomeName, int targetX, int targetZ, int distance) {
@@ -48,10 +50,9 @@ public class HUD extends CustomUIHud {
         }
 
         if (player != null) {
-            double dx = getPlayerRef().getTransform().getPosition().getX() - targetX;
-            double dz = getPlayerRef().getTransform().getPosition().getZ() - targetZ;
-
-            this.distance = (int) sqrt(pow(dx, 2.0) + pow(dz, 2.0));
+            double dx = targetX - getPlayerRef().getTransform().getPosition().getX();
+            double dz = targetZ - getPlayerRef().getTransform().getPosition().getZ();
+            this.distance = (int) Math.sqrt(dx * dx + dz * dz);
 
             if(BiomesCompass.getCompassManager().getPlayersTracking().containsKey(getPlayerRef().getUuid())) {
                 UICommandBuilder update = new UICommandBuilder();
@@ -65,7 +66,7 @@ public class HUD extends CustomUIHud {
         if (this.lastNeedleIndex == frameIndex) return;
 
         this.lastNeedleIndex = frameIndex;
-        String texturePath = String.format("needles/needle_%02d.png", frameIndex);
+        String texturePath = String.format("HUD/needles/needle_%02d.png", frameIndex);
 
         UICommandBuilder update = new UICommandBuilder();
 
@@ -76,9 +77,15 @@ public class HUD extends CustomUIHud {
 
         update.setObject("#Needle.Background", style);
 
-        BiomesCompass.getInstance().getLogger().atInfo().log("Direction changed to " + texturePath);
-
         this.update(false, update);
+    }
+
+    public float getLastAngle() {
+        return lastAngle;
+    }
+
+    public void setLastAngle(float lastAngle) {
+        this.lastAngle = lastAngle;
     }
 
     public int getTargetX() {

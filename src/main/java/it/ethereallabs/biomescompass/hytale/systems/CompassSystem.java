@@ -11,7 +11,6 @@ import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.entity.movement.MovementStatesComponent; // Assicurati sia corretto per la rotazione
 import it.ethereallabs.biomescompass.BiomesCompass;
 import it.ethereallabs.biomescompass.core.CompassUtils;
 import it.ethereallabs.biomescompass.hud.EmptyHUD;
@@ -23,6 +22,8 @@ import javax.annotation.Nullable;
 public class CompassSystem extends EntityTickingSystem<EntityStore> {
 
     private final Query<EntityStore> query = Query.and(Player.getComponentType());
+
+    private static final float SMOOTH_FACTOR = 0.2f;
 
     private boolean isCompass(@Nullable ItemStack stack) {
         return stack != null && (
@@ -72,27 +73,32 @@ public class CompassSystem extends EntityTickingSystem<EntityStore> {
     }
 
     private void updateNeedleRotation(PlayerRef player, HUD hud) {
-        float angleDegrees = getAngleDegrees(player, hud);
+        var pos = player.getTransform().getPosition();
 
-        angleDegrees = (angleDegrees % 360 + 360) % 360;
+        double dx = hud.getTargetX() - pos.getX();
+        double dz = hud.getTargetZ() - pos.getZ();
 
-        int frameIndex = Math.round((angleDegrees / 360f) * 64) % 64;
+        double targetAngle = Math.atan2(dx, dz);
+
+        float playerYaw = player.getHeadRotation().getYaw();
+
+        float relativeAngle = (float) (playerYaw - targetAngle);
+
+        float lastAngle = hud.getLastAngle();
+        float diff = relativeAngle - lastAngle;
+
+        while (diff < -Math.PI) diff += (float) (2 * Math.PI);
+        while (diff > Math.PI) diff -= (float) (2 * Math.PI);
+
+        float smoothedAngle = lastAngle + (diff * SMOOTH_FACTOR);
+        hud.setLastAngle(smoothedAngle);
+
+        float normalized = (float) (smoothedAngle / (2 * Math.PI)) + 0.5f;
+
+        int frameIndex = Math.round(normalized * 64) % 64;
+        if (frameIndex < 0) frameIndex += 64;
 
         hud.updateNeedleTexture(frameIndex);
-    }
-
-    private static float getAngleDegrees(PlayerRef player, HUD hud) {
-        var pos = player.getTransform().getPosition();
-        double targetX = hud.getTargetX();
-        double targetZ = hud.getTargetZ();
-
-        float playerYaw = player.getTransform().getRotation().getY();
-
-        double dx = targetX - pos.x;
-        double dz = targetZ - pos.z;
-
-        double angleToTarget = Math.atan2(-dx, -dz);
-        return (float) Math.toDegrees(angleToTarget - playerYaw);
     }
 
     @Override

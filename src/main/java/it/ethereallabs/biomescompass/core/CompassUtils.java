@@ -46,9 +46,9 @@ public class CompassUtils {
                     .generateBiomeAt(zoneResult, worldSeed, checkX, checkZ);
 
             if (biome.getName().equalsIgnoreCase(target)) {
-                double diffX = checkX - startX;
-                double diffZ = checkZ - startZ;
-                int dist = (int) sqrt(pow(diffX, 2.0) + pow(diffZ, 2.0));
+                double diffX = (double)checkX - startX;
+                double diffZ = (double)checkZ - startZ;
+                int dist = (int) Math.sqrt(diffX * diffX + diffZ * diffZ);
 
                 return new int[]{checkX, checkZ, dist};
             }
@@ -64,28 +64,6 @@ public class CompassUtils {
         }
 
         return null;
-    }
-
-    public static int getCompassFrame(
-            double playerX,
-            double playerZ,
-            double targetX,
-            double targetZ,
-            float playerYaw
-    ) {
-        double dx = targetX - playerX;
-        double dz = targetZ - playerZ;
-
-        double targetRadians = atan2(-dx, -dz);
-        float targetYawDegrees = (float) Math.toDegrees(targetRadians);
-        float playerYawDegrees = (float) Math.toDegrees(playerYaw);
-
-        float relativeAngle = (targetYawDegrees - playerYawDegrees) % 360f;
-        if (relativeAngle < 0) {
-            relativeAngle += 360f;
-        }
-
-        return ((int) ((relativeAngle / 11.25f) + 0.5f)) % 32;
     }
 
     public static void performSearch(PlayerRef playerRef, Player player, String targetName) {
