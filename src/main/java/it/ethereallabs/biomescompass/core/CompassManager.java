@@ -5,8 +5,8 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import it.ethereallabs.biomescompass.core.models.PlayerData;
 import it.ethereallabs.biomescompass.hud.EmptyHUD;
 import it.ethereallabs.biomescompass.hud.HUD;
+import it.ethereallabs.biomescompass.utils.CompassUtils;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

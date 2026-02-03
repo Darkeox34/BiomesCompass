@@ -92,4 +92,8 @@ public class HUD extends CustomUIHud {
     public int getTargetZ() {
         return targetZ;
     }
+
+    public String getBiomeName() {
+        return biomeName;
+    }
 }

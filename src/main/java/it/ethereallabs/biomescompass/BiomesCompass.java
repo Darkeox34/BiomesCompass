@@ -8,23 +8,20 @@ import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.plugin.PluginBase;
 import com.hypixel.hytale.server.core.plugin.PluginManager;
-import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.events.AddWorldEvent;
 import com.hypixel.hytale.server.core.universe.world.events.AllWorldsLoadedEvent;
-import com.hypixel.hytale.server.core.universe.world.worldgen.WorldGenLoadException;
-import com.hypixel.hytale.server.worldgen.biome.Biome;
-import com.hypixel.hytale.server.worldgen.chunk.ChunkGenerator;
-import com.hypixel.hytale.server.worldgen.zone.Zone;
-import com.hypixel.hytale.server.worldgen.zone.ZonePatternGenerator;
 import it.ethereallabs.biomescompass.core.CompassManager;
 import it.ethereallabs.biomescompass.hytale.interactions.CustomInteraction;
+import it.ethereallabs.biomescompass.hytale.map.BiomeMarkerProvider;
 import it.ethereallabs.biomescompass.hytale.systems.CompassSystem;
+import it.ethereallabs.biomescompass.utils.BiomeUtils;
 
 import java.util.*;
 
 public class BiomesCompass extends JavaPlugin {
 
-    private final Map<World, List<String>> biomesPerWorld = new HashMap<>();
+    public static final Map<World, List<String>> biomesPerWorld = new HashMap<>();
 
     public static final String COMPASS_ITEM_ID = "Biomes_Compass";
 
@@ -45,6 +42,12 @@ public class BiomesCompass extends JavaPlugin {
         getEventRegistry().register(AllWorldsLoadedEvent.class, this::onAllWorldsLoaded);
 
         getEntityStoreRegistry().registerSystem(new CompassSystem());
+
+        BiomeMarkerProvider markerProvider = new BiomeMarkerProvider();
+        getEventRegistry().registerGlobal(AddWorldEvent.class, event -> {
+            World world = event.getWorld();
+            world.getWorldMapManager().getMarkerProviders().put("biomeCompassMarker", markerProvider);
+        });
 
         getCodecRegistry(Interaction.CODEC).register(
                 "compass_open_ui_interaction",
@@ -69,69 +72,12 @@ public class BiomesCompass extends JavaPlugin {
     public void shutdown() {
     }
 
-    public void loadBiomes(){
-        getLogger().atInfo().log("Loading worlds biomes");
-
-        Collection<World> worlds = Universe.get().getWorlds().values();
-
-        if (worlds.isEmpty()) {
-            getLogger().atSevere().log("No worlds to load");
-            return;
-        }
-
-        for (World world : worlds) {
-            getLogger().atInfo().log("Loading " + world.getName());
-        }
-
-        for (World world : worlds) {
-            if (world == null) continue;
-
-            ZonePatternGenerator zoneGen;
-            try {
-                zoneGen = getZoneGen(world);
-            } catch (WorldGenLoadException e) {
-                e.printStackTrace();
-                return;
-            }
-            Set<String> biomeSet = new HashSet<>();
-            for (Zone zone : zoneGen.getZones()) {
-                for (Biome biome : zone.biomePatternGenerator().getBiomes()) {
-                    biomeSet.add(biome.getName());
-                }
-            }
-
-            getLogger().atInfo().log(biomeSet.size() + " biomes found for world " + world.getName());
-
-            List<String> sortedBiomes = new ArrayList<>(biomeSet);
-            Collections.sort(sortedBiomes);
-
-            biomesPerWorld.put(world, sortedBiomes);
-        }
-    }
-
-    public ZonePatternGenerator getZoneGen(World world) throws WorldGenLoadException {
-        int worldSeedInt = (int) world.getWorldConfig().getSeed();
-
-        Object gen;
-        try {
-            gen = world.getWorldConfig().getWorldGenProvider().getGenerator();
-        } catch (WorldGenLoadException e) {
-            throw new WorldGenLoadException("World gen load exception", e);
-        }
-
-        if (!(gen instanceof ChunkGenerator chunkGen)) {
-            throw new WorldGenLoadException("World gen load exception: generator is not a ChunkGenerator");
-        }
-
-        return chunkGen.getZonePatternGenerator(worldSeedInt);
-    }
-
     public Map<World, List<String>> getBiomesPerWorld() {
         return biomesPerWorld;
     }
 
     public void onAllWorldsLoaded(AllWorldsLoadedEvent event) {
-        loadBiomes();
+        BiomeUtils.loadBiomes();
     }
 
     public void onPlayerDisconnect(PlayerDisconnectEvent event) {

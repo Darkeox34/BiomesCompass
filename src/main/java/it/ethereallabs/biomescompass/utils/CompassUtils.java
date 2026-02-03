@@ -1,4 +1,4 @@
-package it.ethereallabs.biomescompass.core;
+package it.ethereallabs.biomescompass.utils;
 
 import com.buuz135.mhud.MultipleHUD;
 import com.hypixel.hytale.server.core.Message;
@@ -76,7 +76,7 @@ public class CompassUtils {
         );
 
         try {
-            var zoneGen = BiomesCompass.getInstance().getZoneGen(world);
+            var zoneGen = BiomeUtils.getZoneGen(world);
             int seed = (int) world.getWorldConfig().getSeed();
             var transform = playerRefObj.getTransform();
 

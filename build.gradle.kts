@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "it.ethereallabs"
-version = "1.0.3"
+version = "1.0.4"
 
 repositories {
     mavenCentral()
@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.hypixel.hytale:Server:2026.01.22-6f8bdbdc4")
+    compileOnly("com.hypixel.hytale:Server:2026.01.28-87d03be09")
     compileOnly("com.buuz135:MultipleHUD:1.0.3")
 }
 

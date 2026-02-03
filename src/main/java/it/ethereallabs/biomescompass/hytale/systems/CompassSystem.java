@@ -12,7 +12,7 @@ import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import it.ethereallabs.biomescompass.BiomesCompass;
-import it.ethereallabs.biomescompass.core.CompassUtils;
+import it.ethereallabs.biomescompass.utils.CompassUtils;
 import it.ethereallabs.biomescompass.hud.EmptyHUD;
 import it.ethereallabs.biomescompass.hud.HUD;
 
