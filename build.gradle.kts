@@ -16,10 +16,18 @@ repositories {
         name = "hMReleases"
         url = uri("https://maven.hytale-mods.dev/releases")
     }
+    maven {
+        name = "hytale-release"
+        url = uri("https://maven.hytale.com/release")
+    }
+    maven {
+        name = "hytale-pre-release"
+        url = uri("https://maven.hytale.com/pre-release")
+    }
 }
 
 dependencies {
-    compileOnly(files("libs/HytaleServer.jar"))
+    compileOnly("com.hypixel.hytale:Server:2026.01.22-6f8bdbdc4")
     compileOnly("com.buuz135:MultipleHUD:1.0.3")
 }
 

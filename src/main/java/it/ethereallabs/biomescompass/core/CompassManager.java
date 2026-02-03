@@ -6,6 +6,7 @@ import it.ethereallabs.biomescompass.core.models.PlayerData;
 import it.ethereallabs.biomescompass.hud.EmptyHUD;
 import it.ethereallabs.biomescompass.hud.HUD;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -16,13 +17,11 @@ public class CompassManager {
 
     public void startTracking(PlayerRef playerRef, String biomeName, int x, int z, int dist) {
         HUD hud = new HUD(playerRef, biomeName, x, z, dist);
-
         playersTracking.put(playerRef.getUuid(), new PlayerData(false, hud));
     }
 
     public void stopTracking(PlayerRef playerRef) {
         playersTracking.remove(playerRef.getUuid());
-
         if (playerRef.getReference() != null) {
             var player = playerRef.getReference().getStore().getComponent(playerRef.getReference(), Player.getComponentType());
             if (player != null) {

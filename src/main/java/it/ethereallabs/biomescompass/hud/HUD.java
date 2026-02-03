@@ -10,9 +10,6 @@ import it.ethereallabs.biomescompass.BiomesCompass;
 
 import javax.annotation.Nonnull;
 
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
-
 public class HUD extends CustomUIHud {
 
     private static final String UI_FILE = "HUD/HUD.ui";
@@ -94,9 +91,5 @@ public class HUD extends CustomUIHud {
 
     public int getTargetZ() {
         return targetZ;
-    }
-
-    public int getLastNeedleIndex() {
-        return lastNeedleIndex;
     }
 }

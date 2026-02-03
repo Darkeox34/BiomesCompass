@@ -10,7 +10,6 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.worldgen.zone.ZonePatternGenerator;
 import it.ethereallabs.biomescompass.BiomesCompass;
 import it.ethereallabs.biomescompass.hud.EmptyHUD;
-import it.ethereallabs.biomescompass.hud.HUD;
 
 import java.awt.*;
 
@@ -46,8 +45,8 @@ public class CompassUtils {
                     .generateBiomeAt(zoneResult, worldSeed, checkX, checkZ);
 
             if (biome.getName().equalsIgnoreCase(target)) {
-                double diffX = (double)checkX - startX;
-                double diffZ = (double)checkZ - startZ;
+                double diffX = (double) checkX - startX;
+                double diffZ = (double) checkZ - startZ;
                 int dist = (int) Math.sqrt(diffX * diffX + diffZ * diffZ);
 
                 return new int[]{checkX, checkZ, dist};
@@ -122,20 +121,18 @@ public class CompassUtils {
     }
 
     public static void setHUD(PlayerRef playerRef, Player player, String hudName, CustomUIHud hud) {
-        if(BiomesCompass.getInstance().isMultipleHUD()) {
+        if (BiomesCompass.getInstance().isMultipleHUD()) {
             BiomesCompass.getInstance().getLogger().atInfo().log("Showing HUD to " + player.getDisplayName());
             MultipleHUD.getInstance().setCustomHud(player, playerRef, hudName, hud);
-        }
-        else
+        } else
             player.getHudManager().setCustomHud(playerRef, hud);
     }
 
     public static void hideHUD(PlayerRef playerRef, Player player, String hudName, EmptyHUD hud) {
-        if(BiomesCompass.getInstance().isMultipleHUD()) {
+        if (BiomesCompass.getInstance().isMultipleHUD()) {
             BiomesCompass.getInstance().getLogger().atInfo().log("Hiding HUD to " + player.getDisplayName());
             MultipleHUD.getInstance().hideCustomHud(player, playerRef, hudName);
-        }
-        else
+        } else
             player.getHudManager().setCustomHud(playerRef, hud);
     }
 }

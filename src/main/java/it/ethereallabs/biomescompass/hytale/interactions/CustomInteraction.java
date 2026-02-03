@@ -16,8 +16,6 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Sim
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import it.ethereallabs.biomescompass.BiomesCompass;
-import it.ethereallabs.biomescompass.core.CompassUtils;
-import it.ethereallabs.biomescompass.hud.EmptyHUD;
 import it.ethereallabs.biomescompass.ui.BiomeSearchPage;
 
 import javax.annotation.Nonnull;

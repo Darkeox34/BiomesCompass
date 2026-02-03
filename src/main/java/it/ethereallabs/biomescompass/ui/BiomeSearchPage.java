@@ -18,7 +18,6 @@ import it.ethereallabs.biomescompass.BiomesCompass;
 import it.ethereallabs.biomescompass.core.CompassUtils;
 
 import javax.annotation.Nonnull;
-import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
 
