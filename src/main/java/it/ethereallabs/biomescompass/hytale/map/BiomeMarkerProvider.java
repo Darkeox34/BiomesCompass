@@ -5,8 +5,8 @@ import com.hypixel.hytale.protocol.packets.worldmap.MapMarker;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.worldmap.WorldMapManager;
-import com.hypixel.hytale.server.core.universe.world.worldmap.markers.MapMarkerTracker;
-import com.hypixel.hytale.server.core.util.PositionUtil;
+import com.hypixel.hytale.server.core.universe.world.worldmap.markers.MapMarkerBuilder;
+import com.hypixel.hytale.server.core.universe.world.worldmap.markers.MarkersCollector;
 import it.ethereallabs.biomescompass.BiomesCompass;
 import it.ethereallabs.biomescompass.core.models.PlayerData;
 import it.ethereallabs.biomescompass.hud.HUD;
@@ -19,14 +19,9 @@ public class BiomeMarkerProvider implements WorldMapManager.MarkerProvider {
     @Override
     public void update(
             @Nonnull World world,
-            @Nonnull MapMarkerTracker tracker,
-            int chunkViewRadius,
-            int playerChunkX,
-            int playerChunkZ
+            @Nonnull Player player,
+            @Nonnull MarkersCollector collector
     ) {
-        Player player = tracker.getPlayer();
-        if (player == null) return;
-
         PlayerData data = BiomesCompass.getCompassManager().getPlayersTracking().get(player.getUuid());
 
         if (data != null && data.usingCompass() && data.hud() != null) {
@@ -39,23 +34,11 @@ public class BiomeMarkerProvider implements WorldMapManager.MarkerProvider {
             String markerId = "BiomeTrack-" + player.getUuid();
             String displayName = "Biome: " + hud.getBiomeName();
 
-            tracker.trySendMarker(
-                    chunkViewRadius,
-                    playerChunkX,
-                    playerChunkZ,
-                    targetPos,
-                    0f,
-                    markerId,
-                    displayName,
-                    hud,
-                    (id, name, context) -> new MapMarker(
-                            id,
-                            name,
-                            BIOME_ICON,
-                            PositionUtil.toTransformPacket(biomeTransform),
-                            null
-                    )
-            );
+            MapMarker marker = new MapMarkerBuilder(markerId, BIOME_ICON, biomeTransform)
+                    .withCustomName(displayName)
+                    .build();
+
+            collector.addIgnoreViewDistance(marker);
         }
     }
 }

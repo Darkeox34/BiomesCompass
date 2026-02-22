@@ -28,7 +28,7 @@ Group #HudContainer {
       Group {
         Anchor: (Width: 200, Height: 145);
         Background: PatchStyle(
-          TexturePath: "screenshot2.png",
+          TexturePath: "compass.png",
           Border: 0
         );
       }

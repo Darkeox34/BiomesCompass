@@ -38,6 +38,11 @@ public class HUD extends CustomUIHud {
         builder.set("#TrackingLabel.Text", "Tracking: " + biomeName);
         builder.set("#CoordsLabel.Text", "Target: " + targetX + ", " + targetZ);
         builder.set("#DistLabel.Text", "Distance: " + distance + "m");
+
+        String texturePath = "HUD/needles/needle_00.png";
+        PatchStyle style = new PatchStyle();
+        style.setTexturePath(Value.of(texturePath));
+        builder.setObject("#Needle.Background", style);
     }
 
     public void tickHudTracking() {
