@@ -1,4 +1,4 @@
-<img src="https://i.imgur.com/PUUmGh9.png" width="64" align="left" />
+<img src="https://ethereallabs.it/images/biomescompass.png?height=600&width=800" width="64" align="left" />
 
 # Biomes Compass
 
